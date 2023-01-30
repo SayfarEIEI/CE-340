@@ -5,29 +5,34 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
     <script src="jquery/dist/jquery.js"></script>
+    <script src="js/02basic.js" ></script>
     <title>Basic DApp</title>
 
 </head>
-
 <body>
     <div class="container-fluid">
         <h1>Basic DApp</h1>
         <div class="card">
             <div class="card-body">
-                <form>
-                    <div class="row mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Email address</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                      <label for="exampleInputPassword1" class="form-label">Password</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1">
+                <div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="param1" class="form-label">Parameter #1</label>
+                            <input type="number" class="form-control" id="param1">
+                        </div>
+                        <div class="col mb-3">
+                            <label for="param2" class="form-label">Parameter #2</label>
+                            <input type="number" class="form-control" id="param2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p id="result"></p>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </form>
+                    <button id="btn1" type="submit" class="btn btn-primary">Submit</button>
+                </div>
             </div>
         </div>
     </div>
-
 </body>
-
 </html>
