@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="jquery/dist/jquery.js"></script>
+    <style>
+        .mybox {
+            border: 1px solid;
+            width: 200px;
+            height: 200px;
+        }
+        .red{
+            background-color: red;
+        }
+        .bol{
+            font-weight: bold;
+        }
+    </style>
+    <title>Jquery Tutorial</title>
+    <script>
+        $(function () {
+            // $('#btn1').on('click', e => {
+               
+            //     $('.mybox').toggleClass('red')
+                
+            // });
+            // $('#btn2').on('click',e=>{
+            //     $('.mybox').slideUp('slow');
+            // })
+            // $('#btn3').on('click',e=>{
+            //     $('.mybox').slideDown(20);
+            // })
+            // $('.mybox').on('click', e => {
+            //     if(!$('.mybox').hasClass('red')){
+            //         $('.mybox').addClass('red');
+            //     }
+                
+            // });
+        $('#btn1').on('click',e=>{
+            // $('li:nth-chid(2)').toggleClass('bol')
+            // $('li:odd').toggleClass('red')
+            // $('li:even').toggleClass('bol')
+            // $('li:odd').toggleClass('red')
+            const randomIndex = Math.floor(Math.random()*8)
+            const selectorStr = 'li:eq('+randomIndex+')'
+            $(selectorStr).toggleClass('bol')
+        })
+        });
+
+    </script>
+</head>
+
+<body>
+    <h1>Jquery Tutorial</h1>
+    <div class="mybox"></div>
+    <br>
+    <button id="btn1">Click me</button>
+    <!-- <br>
+    <button id="btn2">Button 2</button>
+    <br>
+    <button id="btn3">Button 3</button> -->
+    <ul>
+        <li>Item #1</li>
+        <li>Item #2</li>
+        <li>Item #3</li>
+        <li>Item #4</li>
+        <li>Item #5</li>
+        <li>Item #5</li>
+        <li>Item #6</li>
+        <li>Item #7</li>
+        <li>Item #8</li>
+    </ul>
+</body>
+
+</html>
