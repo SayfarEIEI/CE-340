@@ -12,6 +12,7 @@ contract BasicMath {
     return x*y;
   }
   function divide(int x,int y)public pure returns (int){
+    require(y!=0,"devide by zero");
     return x/y;
   }
 }

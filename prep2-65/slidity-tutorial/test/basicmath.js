@@ -13,7 +13,7 @@ contract('BasicMath', (accounts) => {
     const ba = await BasicMath.deployed();  
     const x =7;
     const y = 5;
-    const expected = x / y;
+    const expected = Math.floor( x / y);
     // const result = await ba.add.call(x,y)
     assert.equal(await ba.divide.call(x,y), expected, "the divide function retrun incorrect result");
   });
