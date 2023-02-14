@@ -30,7 +30,7 @@ $(async()=>{
     }
     try {
         const result = await basicMath.add(p1,p2);
-        $('#result').text("result is : "+result)
+        $('#result').text(result)
     } catch (error) {
         console.log(error)
     }
