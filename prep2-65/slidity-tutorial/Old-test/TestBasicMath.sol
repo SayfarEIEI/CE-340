@@ -50,7 +50,14 @@ contract TestBasicMathCoin {
 
     Assert.equal(ba.divide(x,y), expexted , "The Divide function returns incorrect result");
   }
- 
+ function testAdd() public {
+    BasicMath ba = BasicMath(DeployedAddresses.BasicMath());
+    uint[] balance = [1, 2, 3];
+
+    int expexted = 1 + 2 + 3 ;
+
+    Assert.equal(ba.add(balance), expexted , "The add function returns incorrect result");
+  }
  
 
 }

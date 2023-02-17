@@ -13,6 +13,7 @@ const deployContract = async () =>{
             console.log(err)
         }   
     });
+    
 };
 
 $(async()=>{

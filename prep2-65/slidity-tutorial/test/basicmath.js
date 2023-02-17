@@ -23,11 +23,11 @@ contract('BasicMath', (accounts) => {
     await result.evaluate(el => el.textContent = '');
    });
   it('test add function', async () => {
-    const x =15,y=13;
+    const x =14 ,y=13;
     const expected = x + y;
     await inputData(x,y,'#btn1');
     const result = await page.waitForSelector('#result');
-    const value = await result.evaluate(e1 => e1.textContent)
+    const value = await result.evaluate(el => el.textContent)
     assert.equal(expected,value,'The add Function is incorrect')
   });
 });
