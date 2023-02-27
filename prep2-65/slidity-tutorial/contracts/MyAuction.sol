@@ -1,53 +1,71 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 import "./Auction.sol";
-  contract MyAuction is Auction{
+
+contract MyAuction is Auction {
     Product public myProduct;
-    mapping(address => uint) bids;
+    mapping (address => uint) bids;
     address [] bidders;
-   constructor(string memory brand,string memory serial,uint period){
-    auctionOwner = payable(msg.sender);
-    auctionStart = block.timestamp;
-    auctionEnd = auctionStart + period * 1 hours;
-    STATE = AuctionState.STARTED;
-    myProduct = Product(brand,serial);
-   }
 
-    modifier onlyOwner{
-      require(msg.sender == auctionOwner);
-      _;
-    }
-       modifier onGoingAuction{
-      require(STATE == AuctionState.STARTED);
-      _;
+    constructor(string memory brand, string memory serial, uint period) {
+        auctionOwner = payable(msg.sender); // address => address payable
+        auctionStart = block.timestamp;
+        auctionEnd = auctionStart + period * 1 hours;
+        STATE = AuctionState.STARTED;
+        myProduct = Product(brand, serial);
     }
 
-   // - Cancle auction
-    function cancleAuction() public virtual override onlyOwner returns(bool){
-
-    }
-    // - End auction
-    function  endAuction() public virtual override onlyOwner returns(bool){
-
-    }
-    // - Bid
-     function  bid() public virtual override onGoingAuction returns(bool){
-
-     }
-    // - getStatus
-    function  getStatus() virtual override public returns(uint){
-
-    }
-    // - GetProductInfo
-    function  getProductInfo() virtual override public returns(string memory,string memory){
-
-    }
-    
-    function withdraw() virtual override public returns (bool){
-
+    modifier onlyOwner {
+        require(msg.sender == auctionOwner);
+        _;
     }
 
-    function getMyBid(address bidder) virtual override public returns (uint){
+    modifier onGoingAuction {
+        require(STATE == AuctionState.STARTED);
+        _;
+    }
 
+    function cancelAuction() public virtual override onlyOwner returns (bool) {}
+
+    function endAuction() public virtual override onlyOwner returns (bool) {}
+    event BidEvent (address highestBidder,uint highestBid,uint timestamp);
+    function bid() public  payable override  onGoingAuction returns (bool) {
+        require(highestBidder != msg.sender,"alreadly a current highest bidder");
+        require(msg.value > highestBid,"Only higher bid is allowed");
+        highestBidder = msg.sender;
+        highestBid = msg.value;
+        bids[msg.sender] = msg.value;
+        bidders.push(msg.sender);
+        emit BidEvent(msg.sender, msg.value, block.timestamp);
+        return true;
+    }
+
+    function getStatus() public virtual override returns (int256) {}
+
+    function getProductInfo()
+        public
+        view
+        override
+        returns (string memory, string memory)
+    {
+        return (myProduct.Brand, myProduct.SerialNum);
+    }
+    event withdrawEvent(address bidder,uint amount,uint timestampe);
+    function withdraw() public  override returns (bool) {
+        require(msg.sender != highestBidder,"The winner can not withdraw");
+        require(STATE != AuctionState.STARTED,"Can not witdraw from ongoing auction");
+        require(STATE != AuctionState.DESTRUCTED,"Can not withdraw from destroted contract");
+      
+        uint amount = bids[msg.sender];
+        delete bids[msg.sender];
+        payable(msg.sender).transfer(amount);
+        emit withdrawEvent(msg.sender, amount,block.timestamp);
+        return true;
+    }
+
+    function getMyBid(
+        address bidder
+    ) public view override returns (uint256) {
+        return bids[bidder];
     }
 }

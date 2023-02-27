@@ -2,34 +2,42 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 abstract contract Auction {
-
     address payable public auctionOwner;
-    uint public auctionStart;
-    uint public auctionEnd;
-    uint public highesBid;
+    uint256 public auctionStart;
+    uint256 public auctionEnd;
+    uint256 public highestBid;
     address public highestBidder;
 
-    enum AuctionState {STARTED,CANCELLED,ENDED,DESTRUCTED}
-   
+    // bide keyword into enum (number)
+    enum AuctionState {
+        STARTED,
+        CANCELLED,
+        ENDED,
+        DESTRUCTED
+    }
+
+    // declare state of AuctionState type
     AuctionState public STATE;
 
-    struct Product{
-      string Brand;
-      string serialNumber;
+    struct Product {
+        string Brand;
+        string SerialNum;
     }
-    
-    // - Cancle auction
-    function cancleAuction() virtual public returns(bool);
-    // - End auction
-    function  endAuction() virtual public returns(bool);
-    // - Bid
-     function  bid() virtual public returns(bool);
-    // - getStatus
-    function  getStatus() virtual public returns(uint);
-    // - GetProductInfo
-    function  getProductInfo() virtual public returns(string memory,string memory);
-    
-    function withdraw() virtual public returns (bool);
 
-    function getMyBid(address bidder) virtual public returns (uint); 
+    function cancelAuction() public virtual returns (bool);
+
+    function endAuction() public virtual returns (bool);
+
+    function bid() virtual payable public returns (bool);
+
+    function getStatus() public virtual returns (int256);
+
+    function getProductInfo()
+        public
+        virtual
+        returns (string memory, string memory); // If data are complex, then we store it into memory.
+
+    function withdraw() public virtual returns (bool);
+
+    function getMyBid(address bidder) public virtual returns (uint256);
 }
