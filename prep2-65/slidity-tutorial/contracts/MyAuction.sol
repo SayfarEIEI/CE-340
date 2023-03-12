@@ -24,10 +24,18 @@ contract MyAuction is Auction {
         require(STATE == AuctionState.STARTED);
         _;
     }
-
-    function cancelAuction() public virtual override onlyOwner returns (bool) {}
-
-    function endAuction() public virtual override onlyOwner returns (bool) {}
+    event CancelEvent(uint timestamp);
+    function cancelAuction() public  override onlyOwner returns (bool) {
+        STATE = AuctionState.CANCELLED;
+        emit CancelEvent(block.timestamp);
+        return true;
+    }
+    event EndEvent(address highestBidder,uint highestBid,uint timestamp);
+    function endAuction() public  override onlyOwner returns (bool) {
+        STATE = AuctionState.ENDED;
+        emit EndEvent(highestBidder,highestBid,block.timestamp);
+        return true;
+    }
     event BidEvent (address highestBidder,uint highestBid,uint timestamp);
     function bid() public  payable override  onGoingAuction returns (bool) {
         require(highestBidder != msg.sender,"alreadly a current highest bidder");

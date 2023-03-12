@@ -191,7 +191,7 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\nabstract contract Auction {\n    address payable public auctionOwner;\n    uint256 public auctionStart;\n    uint256 public auctionEnd;\n    uint256 public highestBid;\n    address public highestBidder;\n\n    // bide keyword into enum (number)\n    enum AuctionState {\n        STARTED,\n        CANCELLED,\n        ENDED,\n        DESTRUCTED\n    }\n\n    // declare state of AuctionState type\n    AuctionState public STATE;\n\n    struct Product {\n        string Brand;\n        string SerialNum;\n    }\n\n    function cancelAuction() public virtual returns (bool);\n\n    function endAuction() public virtual returns (bool);\n\n    function bid() virtual payable public returns (bool);\n\n    function getStatus() public virtual returns (int256);\n\n    function getProductInfo()\n        public\n        virtual\n        returns (string memory, string memory); // If data are complex, then we store it into memory.\n\n    function withdraw() public virtual returns (bool);\n\n    function getMyBid(address bidder) public virtual returns (uint256);\n}\n",
-  "sourcePath": "C:\\Users\\Sayfar\\Desktop\\CE-340\\prep2-65\\slidity-tutorial\\contracts\\Auction.sol",
+  "sourcePath": "C:\\Users\\Sayfar\\OneDrive\\เดสก์ท็อป\\CE-340\\prep2-65\\slidity-tutorial\\contracts\\Auction.sol",
   "ast": {
     "absolutePath": "project:/contracts/Auction.sol",
     "exportedSymbols": {
@@ -967,8 +967,8 @@
     "version": "0.8.13+commit.abaa5c0e.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.11",
-  "updatedAt": "2023-02-27T08:20:50.843Z",
+  "schemaVersion": "3.4.13",
+  "updatedAt": "2023-03-07T03:56:45.727Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

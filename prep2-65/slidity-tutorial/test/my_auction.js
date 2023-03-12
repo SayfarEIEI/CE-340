@@ -1,5 +1,6 @@
 const MyAuction = artifacts.require("MyAuction");
 const product = require('../migrations/product.json')
+const BN = require('bn.js')
 contract("MyAuction", function (accounts) {
     // should return the correct auction owner (address)
     it("should return the correct auction owner (address)", async function () {
@@ -78,22 +79,43 @@ contract("MyAuction", function (accounts) {
       }
       return assert.isTrue(withdrawFail,"Any bidder must not be able to withdraw during ongoing auction");
     });
-  
+    const auctionStates = [ "STARTED","CANCELLED","ENDED","DESTRUCTED"]
     // should close the auction properly
     it("should close the auction properly", async function () {
-      await MyAuction.deployed();
-      return assert.isTrue(false);
+      const auction = await MyAuction.deployed();
+      await auction.endAuction({from:accounts[0]});
+      const currentState = await auction.STATE.call();
+      return assert.equal(currentState,auctionStates.indexOf("ENDED"),"The auction is still not ended!");
     });
   
     // should allow any withdrawal after the auction has ended
     it("should allow any withdrawal after the auction has ended", async function () {
-      await MyAuction.deployed();
-      return assert.isTrue(false);
+      const auction =  await MyAuction.deployed();
+      let i ;
+      let success =true;
+      try {
+        for(i = 0;i<sampleBidAmountBN.length-1;i++){
+          await auction.withdraw({from:bidders[i]});
+        }
+      } catch (error) {
+        success = false;
+        console.log(error.data.reason);
+      }
+      return assert.isTrue(success,"Some bidders can not withdraw!!!!");
     });
   
     // should not allow to bid ager the auction has ended
     it("should not allow to bid ager the auction has ended", async function () {
-      await MyAuction.deployed();
-      return assert.isTrue(false);
+      const auction =  await MyAuction.deployed();
+      let bidAmount = sampleBidAmountBN[sampleBidAmountBN.length-1];
+      let bidFail = false;
+      bidAmount = new BN(bidAmount).add(new BN(1));
+      try {
+        await auction.bid({from:bidders[sampleBidAmountBN.length],value:bidAmount});
+      } catch (error) {
+        console.log(error.data.reason);
+        bidFail = true;
+      }
+      return assert.isTrue(bidFail,"No one must not be able to bid after auction has ended");
     });
   });
