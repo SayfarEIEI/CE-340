@@ -1,5 +1,5 @@
-const WEB3_URL = "http://127.0.0.1:9545/"
-//const WEB3_URL = "ws://127.0.0.1:9545/"
+//const WEB3_URL = "http://127.0.0.1:9545/"
+const WEB3_URL = "ws://127.0.0.1:8545/"
 let web3,accounts,balances;
 
 async function getAccounts(){
