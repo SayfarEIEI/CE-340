@@ -1,3 +1,5 @@
+const {event} = require("jquery");
+
 let auctionContract,auctionOwner,auction
 const AuctionState = ['STARTED','CANCELLED','ENDED','DESTRUCTED']
 let bidder,currentAccount
@@ -19,46 +21,59 @@ async function init() {
 
         const auctionContract = TruffleContract(contractABI);
         auctionContract.setProvider(web3.currentProvider);
+
         try {
             accounts = await web3.eth.getAccounts();
             // console.log(accounts);
             bidder = accounts[0];
             updateAccounts(accounts);
             auction = await auctionContract.deployed();
-        } catch (err) {
-            console.log(err);
-            return;
-        };
-
-        try {
             const auctionEnd = await auction.auctionEnd.call();
-            const highestBidder = await auction.highestBidder.call();
-            const highestBid = await auction.highestBid.call();
             const myProduct = await auction.getProductInfo();
-            const currentState = await auction.STATE.call();
-            const myBidEther = await auction.getMyBid.call(bidder);
             const dateString = new Date(auctionEnd * 1000);
             $("#AuctionOwner").text(auctionOwner);
-            $("#AuctionEnd").text(dateString.toLocaleString());
-            $("#HighestBidder").text(highestBidder);
-            let bidEther = web3.utils.fromWei(highestBid, 'ether');
-            $("#HighestBid").text(bidEther + ' Ether');
-            $("#State").text(AuctionState[currentState]);
+            $("#AuctionEnd").text(dateString.toLocaleString()); 
             $("#ProductBrand").text(myProduct[0]);
             $("#SerialNumber").text(myProduct[1]);
-            bidEther = web3.utils.fromWei(myBidEther, 'ether');
-            $("#MyBid").text(bidEther + ' Ether');
+            await updateInfo()
 
             auction.BidEvent()
                 .on('data',async e => {
                     updateStatus(e,'BIDED')
+                    await updateInfo()
+                    const highestBidder = event.returnValues.highestBidder
+                    const highestBid = event.returnValues.highestBid
+                    $('#EventsLog').append(
+                        `<li class="lead" >${highestBidder} has biden ${highestBid} Wei</li>`
+                    )
                 })
                 .on('error', err => console.log(err) )
+                auction.EndEvent().on('data',async event =>{
+                    await updateStatus(event,"ENDED")
+                    const highestBidder = event.returnValues.highestBidder
+                    const highestBid = await auction.highestBid.call()
+                    alert(`The Winner is ${highestBidder} who has biden at ${highestBid} Wei`)
+                }).on('error',err =>{console.log(err)})
+                auction.CancelEvent().on('data',async event =>{
+                    await updateStatus(event,"CANCELLED")
+                }).on('error',err =>{console.log(err)})
         } catch (err) {
             console.log(err);
             return;
         };
     });
+}
+async function updateInfo() {
+    const highestBidder = await auction.highestBidder.call();
+    const highestBid = await auction.highestBid.call();
+    const currentState = await auction.STATE.call();
+    const myBidEther = await auction.getMyBid.call(bidder);
+    $("#HighestBidder").text(highestBidder);
+    let bidEther = web3.utils.fromWei(highestBid, 'ether');
+    $("#HighestBid").text(bidEther + ' Ether');
+    $("#State").text(AUCTION_STATE[currentState]);
+    bidEther = web3.utils.fromWei(myBidEther, 'ether');
+    $("#MyBid").text(bidEther + ' Ether');
 }
 async function updateStatus(event,msg){
     const dateString = new Date(event.returnValues.timestamp * 1000)
@@ -85,8 +100,8 @@ async function updateAccounts() {
    $('#AccountList').on('change', async e => {
      currentAccount = e.target.value;
      bidder = accounts[currentAccount];
-// const myBid = await 
-//      $('#MyBid').text(web3.utils.fromWei(myBid) + 'Ether');
+     const myBid = await 
+     $('#MyBid').text(web3.utils.fromWei(myBid) + 'Ether');
    });
 }
 const bid = async () =>{
@@ -99,5 +114,22 @@ const bid = async () =>{
         console.log(err)
     }
 }
-const endAiction = async()=>{}
-const cancelAiction = async()=>{}
+
+const endAiction = async()=>{
+    let result;
+    try {
+        result = await auction.endAiction({from:auctionOwner})
+        console.log("resul:",result)
+    } catch (err) {
+        console.log(err)
+    }
+}
+const cancelAiction = async()=>{
+    let result;
+    try {
+        result = await auction.cancelAiction({from:auctionOwner})
+        console.log("resul:",result)
+    } catch (err) {
+        console.log(err)
+    }
+}

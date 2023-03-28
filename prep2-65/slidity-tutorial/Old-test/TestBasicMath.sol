@@ -17,7 +17,7 @@ contract TestBasicMathCoin {
 
     int expexted = x + y ;
 
-    Assert.equal(ba.add(x,y), expexted , "The add function returns incorrect result");
+    Assert.equal(ba.add(x,y), expexted , "The add function returns incorrect result"); 
   }
    function testSubtract() public {
     BasicMath ba = BasicMath(DeployedAddresses.BasicMath());

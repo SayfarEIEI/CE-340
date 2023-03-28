@@ -44,7 +44,7 @@ contract MyAuction is Auction {
         highestBid = msg.value;
         bids[msg.sender] = msg.value;
         bidders.push(msg.sender);
-        emit BidEvent(msg.sender, msg.value, block.timestamp);
+        emit BidEvent(msg.sender, msg.value, block. timestamp);
         return true;
     }
 

@@ -11,3 +11,12 @@ module.exports = function(deployer) {
   // deployer.deploy(SimpleMath);
   deployer.deploy(MyAuction,product.brand,product.serial,product.period)
 };
+const Petshop = artifacts.require("Petshop")
+const petPrices = require('./petPrices.json')
+module.exports = function(deployer) {
+  // deployer.deploy(ConvertLib);
+  // deployer.link(ConvertLib, MetaCoin);
+  // deployer.deploy(BasicMath);
+  // deployer.deploy(SimpleMath);
+  deployer.deploy(Petshop,petPrices)
+};

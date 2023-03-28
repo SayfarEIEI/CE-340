@@ -9,12 +9,7 @@ abstract contract Auction {
     address public highestBidder;
 
     // bide keyword into enum (number)
-    enum AuctionState {
-        STARTED,
-        CANCELLED,
-        ENDED,
-        DESTRUCTED
-    }
+    enum AuctionState {STARTED,CANCELLED,ENDED,DESTRUCTED }
 
     // declare state of AuctionState type
     AuctionState public STATE;

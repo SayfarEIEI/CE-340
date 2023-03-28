@@ -7,7 +7,8 @@
   },
   "scripts": {
     "dev": "lite-server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ganache":"truffle migrate --network ganache --reset"
   },
   "author": "",
   "license": "ISC",
