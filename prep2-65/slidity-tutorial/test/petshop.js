@@ -31,4 +31,37 @@ contract("Petshop", function ( accounts ) {
     const expected = petPrices.every((val,index)=> String(val) == prices[index])
     return assert.isTrue(expected,"Some or all prices are incorrect");
   });
+
+  const targetPetId = 6 
+  const shopOwner = accounts[0]
+  it("should buy a pet", async function () {
+    const petshop = await Petshop.deployed();
+    const prevBal = await petshop.getBalance({from: shopOwner});
+    const buyer = accounts[1];
+    let currentBal;
+    const petPrice = await petshop.getPrice(targetPetId);
+    try{
+      await petshop.buy(targetPetId, {from : buyer, value: petPrice});
+    }catch (err){
+      console.log(err)
+    }
+    currentBal = await petshop.getBalance({from : shopOwner});
+    const diff = currentBal.sub(prevBal);
+    assert.equal(diff.toString(), petPrice.toString(), "the balance is incorrect");
+
+    const expectedBuyer = await petshop.getBuyer(targetPetId);
+
+    return assert.equal(expectedBuyer , buyer, "buyer info is incorrect");
+  }); 
+  it("should allow shopOwner to withdraw", async function () {
+    const petshop =  await Petshop.deployed();
+    const prevBal = await petshop.getBalance({from:shopOwner})
+    try {
+      await petshop.withdraw(prevBal,{from:shopOwner})
+    } catch (error) {
+      console.log(error)
+    }
+    const currentBal = await petshop.getBalance({from:shopOwner})
+    return assert.isTrue(prevBal.gt(currentBal) && currentBal.eq(new web3.utils.BN(0)),"the contract balance is incorrect" );
+  });
 });
