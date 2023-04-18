@@ -71,8 +71,12 @@ const App = {
       $('#shop-owner').text(owner);
       // update balance info
       await App.updateBalanceInfo()
-      // watch for events
+      // watch for smart contract events
+      App.watcher = App.petshop.allEvents({from: App.lastBlock + 1})
+      .on("data",App.handleEvent)
+      .no("error",console.error);
       // bind event
+      App.bindEvents();
     } catch (err) {
       console.log(err);
     }
@@ -128,6 +132,12 @@ const App = {
     if (!e || !e.event) return;
     switch (e.event) {
       // handle various cases here
+      case "Sold":
+        await App.updatePetStatus(e);
+        await App.updateBalanceInfo();
+        break;
+      case "Withdrawn":
+        break;
       default:
         console.log("Unhandled event", e);
         break;
@@ -144,6 +154,7 @@ const App = {
     let result;
     try {
       // call buy function
+      App.petshop.buy(petId,{value:App.petPrices[petId],from:App.accounts[0]});
     } catch (err) {
       console.log(err);
       $(e.target)
