@@ -13,10 +13,12 @@ module.exports = function(deployer) {
 };
 const Petshop = artifacts.require("Petshop")
 const petPrices = require('./petPrices.json')
+const CinemaTicket = artifacts.require("CinemaTicket")
 module.exports = function(deployer) {
   // deployer.deploy(ConvertLib);
   // deployer.link(ConvertLib, MetaCoin);
   // deployer.deploy(BasicMath);
   // deployer.deploy(SimpleMath);
   deployer.deploy(Petshop,petPrices)
+  deployer.deploy(CinemaTicket,20,2000)
 };

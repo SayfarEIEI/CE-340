@@ -126,6 +126,15 @@ const App = {
 
   handleWithdraw: async e => {
       // handle withdraw here
+      const cBalance = await App.petshop.getBalance.call();
+      try {
+        if(cBalance.gt(0)){
+          result = await App.petshop.withdraw(cBalance,{from:App.account[0]});
+          await App.updateBalanceInfo();
+        }
+      } catch (err) {
+        console.log(err);
+      } 
   },
 
   handleEvent: async e => {
@@ -154,7 +163,7 @@ const App = {
     let result;
     try {
       // call buy function
-      App.petshop.buy(petId,{value:App.petPrices[petId],from:App.accounts[0]});
+     await  App.petshop.buy(petId,{value:App.petPrices[petId],from:App.accounts[0]});
     } catch (err) {
       console.log(err);
       $(e.target)
